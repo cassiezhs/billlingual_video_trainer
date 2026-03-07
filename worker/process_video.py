@@ -8,8 +8,17 @@ import os
 import json
 import subprocess
 from pathlib import Path
+import shutil
+import platform
 
-FFMPEG = r"D:\ffmpeg\ffmpeg-8.0.1-essentials_build\bin\ffmpeg.exe"
+FFMPEG = (
+    os.getenv("FFMPEG_PATH")
+    or shutil.which("ffmpeg")
+    or ("/usr/local/bin/ffmpeg" if platform.system() == "Darwin" else None)
+)
+
+if not FFMPEG:
+    raise FileNotFoundError("FFmpeg not found. Install ffmpeg or set FFMPEG_PATH.")
 # Add parent directory to path to import prisma client
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
